@@ -6,8 +6,7 @@ import pandas as pd
 def read_raw_dataset() -> pd.DataFrame:
     """Reads the Olist e-commerce customers dataset."""
     dataset_path = Path().absolute() / "datasets"
-    customers = pd.read_csv(dataset_path / "olist_customers_dataset.csv")
-    return customers
+    return pd.read_csv(dataset_path / "olist_customers_dataset.csv")
 
 
 def calculate_memory_usage(df_input: pd.DataFrame) -> pd.Series:

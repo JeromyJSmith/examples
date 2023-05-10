@@ -17,8 +17,7 @@ async def get_random_pokemon_name() -> str:
 
 async def next_pokemon(total: int) -> AsyncIterable[str]:
     for _ in range(total):
-        name = await get_random_pokemon_name()
-        yield name
+        yield await get_random_pokemon_name()
 
 
 async def main():

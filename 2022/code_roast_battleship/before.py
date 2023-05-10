@@ -15,8 +15,7 @@ class Game(object):
     def __init__(self, players):
         self.guesses = 5
         self.player_list = []
-        for player in range(players):
-            self.player_list.append(self.guesses)
+        self.player_list.extend(self.guesses for _ in range(players))
         self.current_player = 1
         self.board = self.create_matrix(5, 5)
         self.board_visible = c.deepcopy(self.board)
@@ -46,20 +45,16 @@ class Game(object):
     """
 
     def print_board(self, board_in):
-        x = 0
         y = 0
-        for column in board_in:
-            y = 0
-            for row in column:
+        for x, column in enumerate(board_in):
+            for y, row in enumerate(column):
                 if y == 0:
                     print(" ", row, end=" ")
                 elif y == len(board_in[x]):
                     print("", row, end="")
                 else:
                     print(row, end=" ")
-                y += 1
             print()
-            x += 1
         return None
 
     """
@@ -71,15 +66,14 @@ class Game(object):
 
     def user_input(self):
         line = input("\n")
-        if len(line) != 0:
-            if int(line) > len(self.board):
-                print("That's not even in the ocean! Try again.", end="")
-                return self.user_input()
-            else:
-                return int(line) - 1
-        else:
+        if len(line) == 0:
             print("You didn't type anything! Try again", end="")
-            return self.user_input()
+
+        elif int(line) <= len(self.board):
+            return int(line) - 1
+        else:
+            print("That's not even in the ocean! Try again.", end="")
+        return self.user_input()
 
     """
     I wanted to avoid retyping code as much as possible
@@ -91,24 +85,20 @@ class Game(object):
     def player_guesses(self):
         if self.player_list[self.current_player - 1] == 0:
             return False
-        else:
-            print(
-                "Player {} has {} guesses left.".format(
-                    self.current_player, self.player_list[self.current_player - 1]
-                )
-            )
+        print(
+            f"Player {self.current_player} has {self.player_list[self.current_player - 1]} guesses left."
+        )
 
-            print("Player {}: Guess row: ".format(self.current_player), end="")
-            self.guess_row = self.user_input()
+        print(f"Player {self.current_player}: Guess row: ", end="")
+        self.guess_row = self.user_input()
 
-            print("Player {}: Guess column: ".format(self.current_player), end="")
-            self.guess_col = self.user_input()
+        print(f"Player {self.current_player}: Guess column: ", end="")
+        self.guess_col = self.user_input()
 
-            if self.board[self.guess_row][self.guess_col] == "X":
-                print("You've already guessed on that row! Try again.")
-                return self.player_guesses()
-            else:
-                return None
+        if self.board[self.guess_row][self.guess_col] != "X":
+            return None
+        print("You've already guessed on that row! Try again.")
+        return self.player_guesses()
 
     """
     Seperating out the game_logic to try to make the main function as readable as possible.
@@ -118,29 +108,27 @@ class Game(object):
     def game_logic(self):
         self.player_guesses()
 
-        # I first did -1 here and spread out in the code. Very bad and confusing.
         if (
             self.board[self.guess_row][self.guess_col]
             == self.board[self.ship_row][self.ship_col]
         ):
             # if self.guess_row == self.ship_row and self.guess_col == self.ship_col:
             return True
-        else:
-            if self.player_list[self.current_player - 1] > 0:
-                print("Sorry, you missed!")
-                self.board[self.guess_row][self.guess_col] = "X"
-                self.board_visible[self.guess_row][self.guess_col] = "X"
-                self.player_list[self.current_player - 1] -= 1
-                self.print_board(self.board_visible)
+        if self.player_list[self.current_player - 1] > 0:
+            print("Sorry, you missed!")
+            self.board[self.guess_row][self.guess_col] = "X"
+            self.board_visible[self.guess_row][self.guess_col] = "X"
+            self.player_list[self.current_player - 1] -= 1
+            self.print_board(self.board_visible)
 
-                if len(self.player_list) > 1:
-                    self.current_player += 1
-                if self.current_player > len(self.player_list):
-                    self.current_player = 1
-                return self.game_logic()
-            else:
-                print("Player {} ran out of guesses!".format(self.current_player))
-                return False
+            if len(self.player_list) > 1:
+                self.current_player += 1
+            if self.current_player > len(self.player_list):
+                self.current_player = 1
+            return self.game_logic()
+        else:
+            print(f"Player {self.current_player} ran out of guesses!")
+            return False
 
     """
     Keeping the main function simple and easy to read by handling game logic
@@ -154,11 +142,9 @@ class Game(object):
         if self.game_logic() == True:
             self.board[self.ship_row][self.ship_col] = "S"
             self.print_board(self.board)
-            print(
-                "Congratulations! Player {} sank the ship!".format(self.current_player)
-            )
+            print(f"Congratulations! Player {self.current_player} sank the ship!")
         else:
-            print("Game over! Player {} has lost!".format(self.current_player))
+            print(f"Game over! Player {self.current_player} has lost!")
             self.print_board(self.board)
 
 
@@ -173,14 +159,13 @@ def battleship_run():
     print("Please enter how many players are going to play:")
     players = input("\n")
     if len(players) > 0:
-        if int(players) < 0:
-            print("You can't have a negative amount of players. Try again.")
-            return battleship_run()
-        else:
+        if int(players) >= 0:
             return int(players)
+        print("You can't have a negative amount of players. Try again.")
     else:
         print("You didn't type any player amount! Try again.")
-        return battleship_run()
+
+    return battleship_run()
 
 
 """

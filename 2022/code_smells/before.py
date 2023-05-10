@@ -67,27 +67,19 @@ class Company:
 
     def find_managers(self) -> List[Employee]:
         """Find all manager employees."""
-        managers = []
-        for employee in self.employees:
-            if employee.role == "manager":
-                managers.append(employee)
-        return managers
+        return [employee for employee in self.employees if employee.role == "manager"]
 
     def find_vice_presidents(self) -> List[Employee]:
         """Find all vice-president employees."""
-        vice_presidents = []
-        for employee in self.employees:
-            if employee.role == "vice_president":
-                vice_presidents.append(employee)
-        return vice_presidents
+        return [
+            employee
+            for employee in self.employees
+            if employee.role == "vice_president"
+        ]
 
     def find_interns(self) -> List[Employee]:
         """Find all interns."""
-        interns = []
-        for employee in self.employees:
-            if employee.role == "intern":
-                interns.append(employee)
-        return interns
+        return [employee for employee in self.employees if employee.role == "intern"]
 
     def pay_employee(self, employee: Employee) -> None:
         """Pay an employee."""

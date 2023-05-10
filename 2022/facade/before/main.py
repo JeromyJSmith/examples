@@ -64,10 +64,11 @@ class SmartApp(tk.Tk):
         logging.info(f"Speaker {self.speaker_id} status: {self.speaker_on}")
 
     def display_status(self) -> None:
-        logging.info(f"Display status for IOT devices.")
-        status = ""
-        for device_id, device in self.service.devices().items():
-            status += f"{device_id}: {device.status_update()}"
+        logging.info("Display status for IOT devices.")
+        status = "".join(
+            f"{device_id}: {device.status_update()}"
+            for device_id, device in self.service.devices().items()
+        )
         self.status_label.config(text=status)
         logging.info(f"Status: {status}")
 

@@ -9,14 +9,12 @@ import pandas as pd
 
 def read_airports_dataset(path: Path, filename: str) -> pd.DataFrame:
     """Read the Netherlands airport dataset csv file as a pandas dataframe."""
-    airports = pd.read_csv(path / filename)
-    return airports
+    return pd.read_csv(path / filename)
 
 
 def remove_metadata_information(path: Path, filename: str) -> pd.DataFrame:
     """Read the Netherlands airport dataset csv file as a pandas dataframe."""
-    df_out = pd.read_csv(path / filename, skiprows=2)
-    return df_out
+    return pd.read_csv(path / filename, skiprows=2)
 
 
 def main() -> None:

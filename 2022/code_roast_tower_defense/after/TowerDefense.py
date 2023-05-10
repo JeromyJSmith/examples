@@ -12,9 +12,7 @@ from game import Game
 gridSize = 30  # the height and width of the array of blocks
 blockSize = 20  # pixels wide of each block
 mapSize = gridSize * blockSize
-blockGrid = [
-    [0 for y in range(gridSize)] for x in range(gridSize)
-]  # creates the array for the grid
+blockGrid = [[0 for _ in range(gridSize)] for _ in range(gridSize)]
 blockDictionary = ["NormalBlock", "PathBlock", "WaterBlock"]
 monsterDictionary = [
     "Monster1",
@@ -36,7 +34,7 @@ towerCost = {
     "Tack Tower": 150,
     "Power Tower": 200,
 }
-towerGrid = [[None for y in range(gridSize)] for x in range(gridSize)]
+towerGrid = [[None for _ in range(gridSize)] for _ in range(gridSize)]
 pathList = []
 spawnx = 0
 spawny = 0
@@ -147,7 +145,7 @@ class Map:
 
     def loadMap(self, mapName):
         self.drawnMap = Image.new("RGBA", (mapSize, mapSize), (255, 255, 255, 255))
-        self.mapFile = open("texts/mapTexts/" + mapName + ".txt", "r")
+        self.mapFile = open(f"texts/mapTexts/{mapName}.txt", "r")
         self.gridValues = list(map(int, (self.mapFile.read()).split()))
         for y in range(gridSize):
             for x in range(gridSize):
@@ -162,15 +160,15 @@ class Map:
                     y,
                 )  # creates a grid of Blocks
                 blockGrid[x][y].paint(self.drawnMap)
-        self.drawnMap.save("images/mapImages/" + mapName + ".png")
-        self.image = Image.open("images/mapImages/" + mapName + ".png")
+        self.drawnMap.save(f"images/mapImages/{mapName}.png")
+        self.image = Image.open(f"images/mapImages/{mapName}.png")
         self.image = ImageTk.PhotoImage(self.image)
 
     def saveMap(self):
         self.mapFile = open("firstMap.txt", "w")
         for y in range(gridSize):
             for x in range(gridSize):
-                self.mapFile.write(blockGrid[x][y].blockType + " ")
+                self.mapFile.write(f"{blockGrid[x][y].blockType} ")
         self.mapFile.close()
 
     def update(self):
@@ -225,11 +223,11 @@ class Wavegenerator:
         pathList.append(self.direction)
         if self.direction == 1:
             self.gridx += 1
-        if self.direction == 2:
+        elif self.direction == 2:
             self.gridx -= 1
-        if self.direction == 3:
+        elif self.direction == 3:
             self.gridy += 1
-        if self.direction == 4:
+        elif self.direction == 4:
             self.gridy -= 1
         self.decideMove()
 
@@ -239,44 +237,40 @@ class Wavegenerator:
             and self.gridx < gridSize - 1
             and self.gridy >= 0
             and self.gridy <= gridSize - 1
-        ):
-            if isinstance(blockGrid[self.gridx + 1][self.gridy], PathBlock):
-                self.direction = 1
-                self.move()
-                return
+        ) and isinstance(blockGrid[self.gridx + 1][self.gridy], PathBlock):
+            self.direction = 1
+            self.move()
+            return
 
         if (
             self.direction != 1
             and self.gridx > 0
             and self.gridy >= 0
             and self.gridy <= gridSize - 1
-        ):
-            if isinstance(blockGrid[self.gridx - 1][self.gridy], PathBlock):
-                self.direction = 2
-                self.move()
-                return
+        ) and isinstance(blockGrid[self.gridx - 1][self.gridy], PathBlock):
+            self.direction = 2
+            self.move()
+            return
 
         if (
             self.direction != 4
             and self.gridy < gridSize - 1
             and self.gridx >= 0
             and self.gridx <= gridSize - 1
-        ):
-            if isinstance(blockGrid[self.gridx][self.gridy + 1], PathBlock):
-                self.direction = 3
-                self.move()
-                return
+        ) and isinstance(blockGrid[self.gridx][self.gridy + 1], PathBlock):
+            self.direction = 3
+            self.move()
+            return
 
         if (
             self.direction != 3
             and self.gridy > 0
             and self.gridx >= 0
             and self.gridx <= gridSize - 1
-        ):
-            if isinstance(blockGrid[self.gridx][self.gridy - 1], PathBlock):
-                self.direction = 4
-                self.move()
-                return
+        ) and isinstance(blockGrid[self.gridx][self.gridy - 1], PathBlock):
+            self.direction = 4
+            self.move()
+            return
 
         global pathList
         pathList.append(5)
@@ -331,10 +325,7 @@ class NextWaveButton:
         self.game.set_state(TowerDefenseGameState.WAIT_FOR_SPAWN)
 
     def paint(self, canvas: Canvas):
-        if self.is_idle and len(monsters) == 0:
-            self.color = "blue"
-        else:
-            self.color = "red"
+        self.color = "blue" if self.is_idle and len(monsters) == 0 else "red"
         canvas.create_rectangle(
             self.x, self.y, self.xTwo, self.yTwo, fill=self.color, outline=self.color
         )  # draws a rectangle where the pointer is
@@ -379,10 +370,7 @@ class StickyButton(MyButton):
 
     def pressed(self):
         global displayTower
-        if displayTower.stickyTarget == False:
-            displayTower.stickyTarget = True
-        else:
-            displayTower.stickyTarget = False
+        displayTower.stickyTarget = displayTower.stickyTarget == False
 
 
 class SellButton(MyButton):
@@ -428,7 +416,7 @@ class Infoboard:
         self.canvas.delete(ALL)  # clear the screen
         self.canvas.create_image(0, 0, image=self.image, anchor=NW)
         self.currentButtons = []
-        if displayTower == None:
+        if displayTower is None:
             return
 
         self.towerImage = ImageTk.PhotoImage(
@@ -472,7 +460,7 @@ class Infoboard:
                 self.canvas.create_text(
                     120,
                     157,
-                    text="Upgrade: " + str(displayTower.upgradeCost),
+                    text=f"Upgrade: {str(displayTower.upgradeCost)}",
                     font=("times", 12),
                     fill="light green",
                     anchor=CENTER,
@@ -492,10 +480,10 @@ class Infoboard:
             self.text = None
             self.towerImage = None
         else:
-            self.text = selectedTower + " cost: " + str(towerCost[selectedTower])
+            self.text = f"{selectedTower} cost: {str(towerCost[selectedTower])}"
             self.towerImage = ImageTk.PhotoImage(
                 Image.open(
-                    "images/towerImages/" + towerDictionary[selectedTower] + "/1.png"
+                    f"images/towerImages/{towerDictionary[selectedTower]}/1.png"
                 )
             )
         self.canvas.delete(ALL)  # clear the screen
@@ -543,7 +531,7 @@ class Towerbox:
         self.box.insert(END, "<None>")
         for i in towerDictionary:
             self.box.insert(END, i)
-        for i in range(50):
+        for _ in range(50):
             self.box.insert(END, "<None>")
         self.box.grid(row=1, column=1, rowspan=2)
         self.box.bind("<<ListboxSelect>>", self.onselect)
@@ -605,10 +593,8 @@ class Mouse:
             self.xoffset = 0
         self.x = event.x + self.xoffset  # sets the "Mouse" x to the real mouse's x
         self.y = event.y + self.yoffset  # sets the "Mouse" y to the real mouse's y
-        if self.x < 0:
-            self.x = 0
-        if self.y < 0:
-            self.y = 0
+        self.x = max(self.x, 0)
+        self.y = max(self.y, 0)
         self.gridx = int((self.x - (self.x % blockSize)) / blockSize)
         self.gridy = int((self.y - (self.y % blockSize)) / blockSize)
 
@@ -659,7 +645,7 @@ class Healthbar:
         self.text = str(health)
 
     def paint(self, canvas):
-        canvas.create_text(40, 40, text="Health: " + self.text, fill="black")
+        canvas.create_text(40, 40, text=f"Health: {self.text}", fill="black")
 
 
 class Moneybar:
@@ -670,7 +656,7 @@ class Moneybar:
         self.text = str(money)
 
     def paint(self, canvas):
-        canvas.create_text(240, 40, text="Money: " + self.text, fill="black")
+        canvas.create_text(240, 40, text=f"Money: {self.text}", fill="black")
 
 
 class Projectile:
@@ -734,8 +720,9 @@ class PowerShot(TrackingBullet):
 
     def gotMonster(self):
         self.target.health -= self.damage
-        if self.target.movement > (self.target.speed) / self.slow:
-            self.target.movement = (self.target.speed) / self.slow
+        self.target.movement = min(
+            self.target.movement, (self.target.speed) / self.slow
+        )
         projectiles.remove(self)
 
 
@@ -787,9 +774,7 @@ class Tower(object):
         self.y = y
         self.gridx = gridx
         self.gridy = gridy
-        self.image = Image.open(
-            "images/towerImages/" + self.__class__.__name__ + "/1.png"
-        )
+        self.image = Image.open(f"images/towerImages/{self.__class__.__name__}/1.png")
         self.image = ImageTk.PhotoImage(self.image)
 
     def update(self):
@@ -877,7 +862,7 @@ class ArrowShooterTower(TargetingTower):
     def __init__(self, x, y, gridx, gridy):
         super(ArrowShooterTower, self).__init__(x, y, gridx, gridy)
         self.name = "Arrow Shooter"
-        self.infotext = "ArrowShooterTower at [" + str(gridx) + "," + str(gridy) + "]."
+        self.infotext = f"ArrowShooterTower at [{str(gridx)},{str(gridy)}]."
         self.range = blockSize * 10
         self.bulletsPerSecond = 1
         self.damage = 10
@@ -911,7 +896,7 @@ class BulletShooterTower(TargetingTower):
     def __init__(self, x, y, gridx, gridy):
         super(BulletShooterTower, self).__init__(x, y, gridx, gridy)
         self.name = "Bullet Shooter"
-        self.infotext = "BulletShooterTower at [" + str(gridx) + "," + str(gridy) + "]."
+        self.infotext = f"BulletShooterTower at [{str(gridx)},{str(gridy)}]."
         self.range = blockSize * 6
         self.bulletsPerSecond = 4
         self.damage = 5
@@ -927,7 +912,7 @@ class PowerTower(TargetingTower):
     def __init__(self, x, y, gridx, gridy):
         super(PowerTower, self).__init__(x, y, gridx, gridy)
         self.name = "Power Tower"
-        self.infotext = "PowerTower at [" + str(gridx) + "," + str(gridy) + "]."
+        self.infotext = f"PowerTower at [{str(gridx)},{str(gridy)}]."
         self.range = blockSize * 8
         self.bulletsPerSecond = 10
         self.damage = 1
@@ -944,7 +929,7 @@ class TackTower(TargetingTower):
     def __init__(self, x, y, gridx, gridy):
         super(TackTower, self).__init__(x, y, gridx, gridy)
         self.name = "Tack Tower"
-        self.infotext = "TackTower at [" + str(gridx) + "," + str(gridy) + "]."
+        self.infotext = f"TackTower at [{str(gridx)},{str(gridy)}]."
         self.range = blockSize * 5
         self.bulletsPerSecond = 1
         self.damage = 10
@@ -971,15 +956,12 @@ class Monster(object):
         self.tick = 0
         self.maxTick = 1
         self.distanceTravelled = distance
-        if self.distanceTravelled <= 0:
-            self.distanceTravelled = 0
+        self.distanceTravelled = max(self.distanceTravelled, 0)
         self.x, self.y = self.positionFormula(self.distanceTravelled)
         self.armor = 0
         self.magicresist = 0
         self.value = 0
-        self.image = Image.open(
-            "images/monsterImages/" + self.__class__.__name__ + ".png"
-        )
+        self.image = Image.open(f"images/monsterImages/{self.__class__.__name__}.png")
         self.image = ImageTk.PhotoImage(self.image)
 
     def update(self):
@@ -1101,7 +1083,7 @@ class AlexMonster(Monster):
     def killed(self):
         global money
         money += self.value
-        for i in range(5):
+        for _ in range(5):
             monsters.append(
                 Monster2(self.distanceTravelled + blockSize * (0.5 - random.random()))
             )
@@ -1121,7 +1103,7 @@ class BenMonster(Monster):
     def killed(self):
         global money
         money += self.value
-        for i in range(2):
+        for _ in range(2):
             monsters.append(
                 LeoMonster(self.distanceTravelled + blockSize * (0.5 - random.random()))
             )
@@ -1188,9 +1170,7 @@ class Block(object):
         pass
 
     def paint(self, draw):
-        self.image = Image.open(
-            "images/blockImages/" + self.__class__.__name__ + ".png"
-        )
+        self.image = Image.open(f"images/blockImages/{self.__class__.__name__}.png")
         self.offset = (int(self.x - self.axis), int(self.y - self.axis))
         draw.paste(self.image, self.offset)
         self.image = None

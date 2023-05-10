@@ -14,13 +14,14 @@ def generate_password(length: int = 6) -> str:
     """
     assert length >= 6, f"Password length can't be less than 6, {length} given!"
     while True:
-        pwd = ""
-        for i in range(length):
-            pwd += "".join(
+        pwd = "".join(
+            "".join(
                 secrets.choice(
                     string.ascii_letters + string.digits + string.punctuation
                 )
             )
+            for _ in range(length)
+        )
         if (
             (any(char.isupper() for char in pwd))
             and (any(char.islower() for char in pwd))
@@ -38,8 +39,7 @@ def generate_guid() -> str:
 
     """
     guid = str(uuid.uuid4())
-    guid = guid.upper()
-    return guid
+    return guid.upper()
 
 
 def generate_credit_card_number(length: int = 8) -> str:

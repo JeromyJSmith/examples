@@ -30,7 +30,7 @@ class Order:
         self.line_items.remove(line_item)
 
     def update_li_quantity(self, line_item: LineItem, quantity: int) -> None:
-        if not line_item in self.line_items:
+        if line_item not in self.line_items:
             return
         self._total_cache -= line_item.total
         line_item.quantity = quantity

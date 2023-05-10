@@ -1,5 +1,5 @@
 def digits_of(number_sequence: str) -> list[int]:
-    return [int(digit) for digit in str(number_sequence)]
+    return [int(digit) for digit in number_sequence]
 
 
 def luhn_checksum(card_number: str) -> bool:

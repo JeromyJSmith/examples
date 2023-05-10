@@ -7,9 +7,7 @@ GreetingFunction = Callable[[str], str]
 
 
 def greet(name: str, greeting_reader: GreetingReader) -> str:
-    if name == "Arjan":
-        return "Bugger off"
-    return f"{greeting_reader()}, {name}."
+    return "Bugger off" if name == "Arjan" else f"{greeting_reader()}, {name}."
 
 
 def greet_list(names: list[str], greet_fn: GreetingFunction) -> list[str]:

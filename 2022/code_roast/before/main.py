@@ -113,15 +113,10 @@ class ScrapeRequest:
         """
         if not isinstance(s_bool, bool):
             raise TypeError
-        if s_bool:
-            slookup_code = "sci"
-        else:
-            slookup_code = "json"
-
+        slookup_code = "sci" if s_bool else "json"
         subclass = cls._registry[slookup_code]
 
-        obj = object.__new__(subclass)
-        return obj
+        return object.__new__(subclass)
 
     def download(self) -> None:
         raise NotImplementedError
@@ -149,16 +144,16 @@ class SciHubScrape(ScrapeRequest, slookup_code="sci"):
         with change_dir(RESEARCH_DIR):
             time.sleep(1)
             with suppress(
-                requests.exceptions.HTTPError, requests.exceptions.RequestException
-            ):
+                        requests.exceptions.HTTPError, requests.exceptions.RequestException
+                    ):
                 r = self.sessions.post(url=self.base_url, data=self.payload)
                 r.raise_for_status()
                 logging.info(r.status_code)
                 soup = BeautifulSoup(r.text, "lxml")
-                self.links = list(
+                self.links = [
                     ((item["onclick"]).split("=")[1]).strip("'")
                     for item in soup.select("button[onclick^='location.href=']")
-                )
+                ]
                 self.enrich_scrape()
 
     def enrich_scrape(self, search_text: str):
@@ -177,7 +172,7 @@ class SciHubScrape(ScrapeRequest, slookup_code="sci"):
             with open("temp_file.txt", "wb") as _tempfile:
                 _tempfile.write(paper_content)
             with open(paper_title, "wb") as file:
-                for line in open("temp_file.txt", "rb").readlines():
+                for line in open("temp_file.txt", "rb"):
                     file.write(line)
             os.remove("temp_file.txt")
 
@@ -218,8 +213,6 @@ class JSONScrape(ScrapeRequest, slookup_code="json"):
                 \n\[sciscraper]: Proceeding to next item in sequence.\
                 Cause of error: {e}\n"
             )
-            pass
-
         except HTTPError as f:
             print(
                 f"\n[sciscraper]: Access to {self.base_url} denied while searching for {search_text}.\
@@ -252,10 +245,7 @@ class JSONScrape(ScrapeRequest, slookup_code="json"):
 
     def specify_search(self, search_text: str) -> str:
         """Determines whether the dimensions.ai query will be for a full_search or just for the doi."""
-        if search_text.startswith("pub"):
-            self.search_field = "full_search"
-        else:
-            self.search_field = "doi"
+        self.search_field = "full_search" if search_text.startswith("pub") else "doi"
         return self.search_field
 
     def get_data_entry(self, item, keys: Optional[list]) -> dict:
@@ -276,7 +266,7 @@ class PDFScrape:
         self.preprints = []
         with pdfplumber.open(self.search_text) as self.study:
             self.n = len(self.study.pages)
-            self.pages_to_check = [page for page in self.study.pages][: self.n]
+            self.pages_to_check = list(self.study.pages)[: self.n]
             for page_number, page in enumerate(self.pages_to_check):
                 page = self.study.pages[page_number].extract_text(
                     x_tolerance=3, y_tolerance=3
@@ -310,8 +300,10 @@ class PDFScrape:
         self.name_words = set(names.words())
         self.word_tokens = word_tokenize(str(self.postprints))
         return [
-            w for w in self.word_tokens if not w in self.stop_words and self.name_words
-        ]  # Filters out the stopwords
+            w
+            for w in self.word_tokens
+            if w not in self.stop_words and self.name_words
+        ]
 
     def _overlap(self, li) -> list:
         """Checks if token words match words in a provided list."""
@@ -489,7 +481,7 @@ class DOIRequest(FileRequest, dlookup_code="doi"):
     def fetch_terms(self):
         print(f"\n[sciscraper]: Getting entries from file: {self.target}")
         with open(self.target, newline="") as f:
-            self.df = [doi for doi in pd.read_csv(f, usecols=["DOI"])["DOI"]]
+            self.df = list(pd.read_csv(f, usecols=["DOI"])["DOI"])
             self.search_terms = [
                 search_text for search_text in self.df if search_text is not None
             ]

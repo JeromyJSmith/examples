@@ -12,10 +12,7 @@ def main():
     var1 = 3
     var2 = 4
 
-    # swap values
-    tmp = var1
-    var1 = var2
-    var2 = tmp
+    var1, var2 = var2, var1
     print(var1, var2)
 
     # unpack a list

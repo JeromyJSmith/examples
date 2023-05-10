@@ -48,8 +48,6 @@ class JSONScraper:
                 \n[sciscraper]: Proceeding to next item in sequence.\
                 Cause of error: {e}\n"
             )
-            pass
-
         except HTTPError as f:
             print(
                 f"\n[sciscraper]: Access to {self.dimensions_url} denied while searching for {search_text}.\
@@ -82,10 +80,7 @@ class JSONScraper:
 
     def specify_search(self, search_text: str) -> str:
         """Determines whether the dimensions.ai query will be for a full_search or just for the doi."""
-        if search_text.startswith("pub"):
-            self.search_field = "full_search"
-        else:
-            self.search_field = "doi"
+        self.search_field = "full_search" if search_text.startswith("pub") else "doi"
         return self.search_field
 
     def get_data_entry(self, item, keys: Optional[list]) -> dict:

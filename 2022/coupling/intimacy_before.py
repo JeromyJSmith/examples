@@ -25,8 +25,8 @@ class Location:
 
 def generate_breadcrumbs(location: Location) -> dict[str, str]:
     breadcrumbs: dict[str, str] = {}
-    main_url = "https://myapi.com"
     if location.geolocation[0]:
+        main_url = "https://myapi.com"
         if location.geolocation[0].postal_code:
             breadcrumbs[
                 "postal_code_url"

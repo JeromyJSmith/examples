@@ -26,13 +26,13 @@ class Order:
         self._update_total_cache()
 
     def remove_line_item(self, line_item: LineItem) -> None:
-        if not line_item in self.line_items:
+        if line_item not in self.line_items:
             return
         self.line_items.remove(line_item)
         self._update_total_cache()
 
     def update_li_quantity(self, line_item: LineItem, quantity: int) -> None:
-        if not line_item in self.line_items:
+        if line_item not in self.line_items:
             return
         line_item.quantity = quantity
         self._update_total_cache()

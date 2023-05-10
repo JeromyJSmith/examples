@@ -20,8 +20,7 @@ class StripePayment(Payment):
 
 
 def main() -> None:
-    my_payment = Payment("card")
-    if my_payment:
+    if my_payment := Payment("card"):
         my_payment.pay(100)
 
 

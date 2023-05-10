@@ -27,8 +27,7 @@ def generate_random_team(size: int) -> list[Employee]:
 
     # generate a random team with one CEO
     team = [Employee.CEO]
-    for _ in range(size - 1):
-        team.append(random.choice(team_no_ceo))
+    team.extend(random.choice(team_no_ceo) for _ in range(size - 1))
     return team
 
 
@@ -39,7 +38,7 @@ def fire_random_employee(team: list[Employee]) -> None:
     team_no_ceo = team.copy()
     team_no_ceo.remove(Employee.CEO)
 
-    if len(team_no_ceo) > 0:
+    if team_no_ceo:
         # remove a random employee from the team
         team.remove(random.choice(team_no_ceo))
     else:

@@ -6,10 +6,11 @@ from network.connection import Connection
 
 
 def get_status(service: IOTService) -> str:
-    logging.info(f"Display status for IOT devices.")
-    status = ""
-    for device_id, device in service.devices().items():
-        status += f"{device_id}: {device.status_update()}"
+    logging.info("Display status for IOT devices.")
+    status = "".join(
+        f"{device_id}: {device.status_update()}"
+        for device_id, device in service.devices().items()
+    )
     logging.info(f"Status: {status}")
     return status
 

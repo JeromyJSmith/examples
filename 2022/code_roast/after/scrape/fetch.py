@@ -12,7 +12,7 @@ from scrape.scraper import Scraper
 def fetch_terms_from_doi(target: str, scraper: Scraper) -> pd.DataFrame:
     print(f"\n[sciscraper]: Getting entries from file: {target}")
     with open(target, newline="") as f:
-        df = [doi for doi in pd.read_csv(f, usecols=["DOI"])["DOI"]]
+        df = list(pd.read_csv(f, usecols=["DOI"])["DOI"])
         search_terms = [search_text for search_text in df if search_text is not None]
         return pd.DataFrame(
             [scraper.scrape(search_text) for search_text in tqdm(search_terms)]
