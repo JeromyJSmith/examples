@@ -5,13 +5,13 @@ from string import Template
 def perc_format():
     name = "Arjan"
     country = "The Netherlands"
-    _ = "%s is from %s." % (name, country)
+    _ = f"{name} is from {country}."
 
 
 def str_format():
     name = "Arjan"
     country = "The Netherlands"
-    _ = "{} is from {}.".format(name, country)
+    _ = f"{name} is from {country}."
 
 
 def f_string():

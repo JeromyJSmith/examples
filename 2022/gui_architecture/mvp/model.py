@@ -16,7 +16,7 @@ class Model:
         self.connection.commit()
 
     def get_tasks(self) -> list[str]:
-        tasks: list[str] = []
-        for row in self.cursor.execute("select title from tasks"):
-            tasks.append(row[0])
+        tasks: list[str] = [
+            row[0] for row in self.cursor.execute("select title from tasks")
+        ]
         return tasks

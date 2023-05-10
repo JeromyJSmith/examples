@@ -51,5 +51,4 @@ def load_label_data(file_path: Path) -> np.ndarray:
         raw = fp.read()
         assert len(raw) == num_images
 
-    data = np.frombuffer(raw, dtype=np.dtype(np.uint8).newbyteorder(">"))
-    return data
+    return np.frombuffer(raw, dtype=np.dtype(np.uint8).newbyteorder(">"))

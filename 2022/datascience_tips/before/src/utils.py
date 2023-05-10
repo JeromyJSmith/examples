@@ -14,15 +14,15 @@ def create_from_missing(root):
 
 def create_from_existing(root):
     children = [int(c.name) for c in root.glob('*') if (c.is_dir() and c.name.isnumeric())]
-    if is_first_experiment(children):
-        child = root / '0'
-    else:
-        child = root / increment_experiment_number(children)
-    return child
+    return (
+        root / '0'
+        if is_first_experiment(children)
+        else root / increment_experiment_number(children)
+    )
 
 
 def is_first_experiment(children: list[int]) -> bool:
-    return len(children) == 0
+    return not children
 
 
 def increment_experiment_number(children: list[int]) -> str:

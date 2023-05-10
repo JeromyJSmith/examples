@@ -2,20 +2,19 @@ import random
 
 
 def place_a_guess(guesses: int, answer: int, player_name: str) -> bool:
-    if guesses > 0:
-        print(f"Player {player_name} has {guesses} guesses left.")
+    if guesses <= 0:
+        return False
+    print(f"Player {player_name} has {guesses} guesses left.")
 
-        guess = int(input("Guess a number: "))
-        if guess == answer:
-            print("You win!")
-            return True
-        else:
-            if guess < answer:
-                print("Too low!")
-            else:
-                print("Too high!")
-            return False
+    guess = int(input("Guess a number: "))
+    if guess == answer:
+        print("You win!")
+        return True
     else:
+        if guess < answer:
+            print("Too low!")
+        else:
+            print("Too high!")
         return False
 
 

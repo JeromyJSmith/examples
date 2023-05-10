@@ -24,8 +24,7 @@ def generate_random_team(size: int) -> list[Employee]:
 
     # generate a random team with one CEO
     team = [Employee.CEO]
-    for _ in range(size - 1):
-        team.append(random.choice(team_no_ceo))
+    team.extend(random.choice(team_no_ceo) for _ in range(size - 1))
     return team
 
 

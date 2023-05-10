@@ -12,8 +12,7 @@ class Person:
 
     @property
     def ssn(self) -> str:
-        masked_ssn = "XXX-XX-" + self.__ssn[-4:]
-        return masked_ssn
+        return f"XXX-XX-{self.__ssn[-4:]}"
 
 
 def main() -> None:

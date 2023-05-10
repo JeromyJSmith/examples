@@ -12,6 +12,6 @@ print(generate_guid())
 
 print(generate_credit_card_number(length=16))
 
-print(str(generate_pin_number(length=4)))
+print(generate_pin_number(length=4))
 
 print(generate_object_id())

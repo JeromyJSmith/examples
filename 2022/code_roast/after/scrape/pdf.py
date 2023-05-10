@@ -26,7 +26,7 @@ def compute_filtered_tokens(text: list[str]) -> set[str]:
     version of the text, with stopwords and names removed.
     """
     word_tokens = word_tokenize("\n".join(text))
-    return set([w for w in word_tokens if not w in STOP_WORDS and NAME_WORDS])
+    return {w for w in word_tokens if w not in STOP_WORDS and NAME_WORDS}
 
 
 def most_common_words(word_set: set[str], n: int) -> list[tuple[str, int]]:
@@ -47,7 +47,7 @@ class PDFScraper(Scraper):
         with pdfplumber.open(search_text) as study:
             pages: list[Any] = study.pages
             n = len(pages)
-            pages_to_check: list[Any] = [page for page in pages][:n]
+            pages_to_check: list[Any] = list(pages)[:n]
             for page_number, page in enumerate(pages_to_check):
                 page: str = pages[page_number].extract_text(
                     x_tolerance=3, y_tolerance=3

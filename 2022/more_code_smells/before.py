@@ -100,11 +100,10 @@ class VehicleRegistry:
     def register_vehicle(self, brand: str, model: str) -> Vehicle:
         """Create a new vehicle and generate an id and a license plate."""
         for vehicle_info in self.vehicle_models:
-            if vehicle_info.brand == brand:
-                if vehicle_info.model == model:
-                    vehicle_id = self.generate_vehicle_id(12)
-                    license_plate = self.generate_vehicle_license(vehicle_id)
-                    return Vehicle(vehicle_id, license_plate, vehicle_info)
+            if vehicle_info.brand == brand and vehicle_info.model == model:
+                vehicle_id = self.generate_vehicle_id(12)
+                license_plate = self.generate_vehicle_license(vehicle_id)
+                return Vehicle(vehicle_id, license_plate, vehicle_info)
         raise VehicleInfoMissingError(brand, model)
 
     def online_status(self) -> RegistryStatus:

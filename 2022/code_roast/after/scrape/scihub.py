@@ -38,16 +38,16 @@ class SciHubScraper:
         with change_dir(self.research_dir):
             time.sleep(1)
             with suppress(
-                requests.exceptions.HTTPError, requests.exceptions.RequestException
-            ):
+                        requests.exceptions.HTTPError, requests.exceptions.RequestException
+                    ):
                 r = self.sessions.post(url=self.scihub_url, data=self.payload)
                 r.raise_for_status()
                 log_msg(str(r.status_code))
                 soup = BeautifulSoup(r.text, "lxml")
-                self.links = list(
+                self.links = [
                     ((item["onclick"]).split("=")[1]).strip("'")
                     for item in soup.select("button[onclick^='location.href=']")
-                )
+                ]
                 self.enrich_scrape()
 
     def enrich_scrape(self, search_text: str):
@@ -68,6 +68,6 @@ class SciHubScraper:
             with open("temp_file.txt", "wb") as _tempfile:
                 _tempfile.write(paper_content)
             with open(paper_title, "wb") as file:
-                for line in open("temp_file.txt", "rb").readlines():
+                for line in open("temp_file.txt", "rb"):
                     file.write(line)
             os.remove("temp_file.txt")

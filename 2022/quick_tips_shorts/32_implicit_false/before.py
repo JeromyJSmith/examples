@@ -15,7 +15,7 @@ class SupportTicket:
 
 def process_tickets(tickets: list[SupportTicket]):
     # if it's empty, don't do anything
-    if len(tickets) == 0:
+    if not tickets:
         print("There are no tickets to process. Well done!")
         return
 

@@ -8,10 +8,7 @@ class XMLAdapter:
         self.soup = soup
 
     def get(self, key: str, default: Any = None) -> Any | None:
-        value = self.soup.find(key)
-        if value:
-            return value.get_text()
-        return default
+        return value.get_text() if (value := self.soup.find(key)) else default
 
 
 # Below is what you would need to do for a class adapter

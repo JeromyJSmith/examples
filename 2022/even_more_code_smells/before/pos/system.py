@@ -26,10 +26,9 @@ class POSSystem:
         return self.orders[order_id]
 
     def compute_order_total_price(self, order: Order) -> int:
-        total = 0
-        for i in range(len(order.prices)):
-            total += order.quantities[i] * order.prices[i]
-        return total
+        return sum(
+            order.quantities[i] * order.prices[i] for i in range(len(order.prices))
+        )
 
     def process_order(self, order: Order) -> None:
         self.payment_processor.process_payment(order.id)

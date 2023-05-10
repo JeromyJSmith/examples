@@ -37,18 +37,13 @@ class LoggingDecorator(AbstractDecorator):
 def is_prime(number: int) -> bool:
     if number < 2:
         return False
-    for element in range(2, int(sqrt(number)) + 1):
-        if number % element == 0:
-            return False
-    return True
+    return all(
+        number % element != 0 for element in range(2, int(sqrt(number)) + 1)
+    )
 
 
 def count_prime_numbers(upper_bound: int) -> int:
-    count = 0
-    for number in range(upper_bound):
-        if is_prime(number):
-            count += 1
-    return count
+    return sum(1 for number in range(upper_bound) if is_prime(number))
 
 
 def main() -> None:

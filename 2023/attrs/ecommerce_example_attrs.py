@@ -15,8 +15,8 @@ def positive_number(
     instance: type, attribute: Attribute[str], value: int | float
 ) -> None:
     """Custom check whether an attribute of an instance has a positive value assingned."""
-    class_name = instance.__class__.__name__
     if value <= 0:
+        class_name = instance.__class__.__name__
         raise ValueError(
             f"{class_name} {attribute.name} attribute must be greater then zero."
         )
@@ -24,8 +24,8 @@ def positive_number(
 
 def percentage_value(instance: type, attribute: Attribute[str], value: float) -> None:
     """Custom check whether an attribute of an instance has a percentage assigned."""
-    class_name = instance.__class__.__name__
     if not 0 <= value <= 1:
+        class_name = instance.__class__.__name__
         raise ValueError(
             f"{class_name} {attribute.name} attribute must be between 0 and 1."
         )

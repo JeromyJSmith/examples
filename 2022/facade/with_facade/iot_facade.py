@@ -28,7 +28,7 @@ class IOTFacade:
         speaker_connection.disconnect()
 
     def get_status(self) -> str:
-        status = ""
-        for device_id, device in self.service.devices().items():
-            status += f"{device_id}: {device.status_update()}"
-        return status
+        return "".join(
+            f"{device_id}: {device.status_update()}"
+            for device_id, device in self.service.devices().items()
+        )

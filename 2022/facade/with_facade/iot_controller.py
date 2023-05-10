@@ -11,7 +11,7 @@ class IOTFacade(Protocol):
 
 
 def get_status(iot: IOTFacade) -> str:
-    logging.info(f"Display status for IOT devices.")
+    logging.info("Display status for IOT devices.")
     status = iot.get_status()
     logging.info(f"Status: {status}")
     return status
@@ -20,4 +20,4 @@ def get_status(iot: IOTFacade) -> str:
 def power_speaker(on: bool, iot: IOTFacade) -> None:
     logging.info(f"Powering speaker: {on}.")
     iot.power_speaker(on)
-    logging.info(f"Message sent to speaker.")
+    logging.info("Message sent to speaker.")

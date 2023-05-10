@@ -72,7 +72,7 @@ class Game:
     def display_tie(self) -> None:
         """Display tie message
         """
-        print(f"It's a tie..")
+        print("It's a tie..")
     
     def display_round_winner(self, winner_name: str, winner_entity: Entity, message: str) -> None:
         """Display the winner of the round
@@ -115,6 +115,6 @@ class Game:
         
     
     def play(self):
-        for i in range(self.max_round):
+        for _ in range(self.max_round):
             self.do_turn()
             self.scoreboard.display_scores()

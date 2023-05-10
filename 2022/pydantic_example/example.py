@@ -63,9 +63,7 @@ class Book(pydantic.BaseModel):
             raise ISBN10FormatError(value=value, message="ISBN10 should be 10 digits.")
 
         def char_to_int(char: str) -> int:
-            if char in "Xx":
-                return 10
-            return int(char)
+            return 10 if char in "Xx" else int(char)
 
         if sum((10 - i) * char_to_int(x) for i, x in enumerate(chars)) % 11 != 0:
             raise ISBN10FormatError(

@@ -9,9 +9,7 @@ class Greeting:
         return f"{self.greeting_intro}, {name}."
 
     def greet_list(self, names: list[str]) -> list[str]:
-        greetings: list[str] = []
-        for name in names:
-            greetings.append(self.greet(name))
+        greetings: list[str] = [self.greet(name) for name in names]
         return greetings
 
 
